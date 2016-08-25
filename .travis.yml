@@ -5,9 +5,14 @@ install:
   - git clone https://github.com/docker-library/official-images.git ~/official-images
 
 script:
-  - docker build -t "doppler-relay-php-base" .
-  - ~/official-images/test/run.sh "doppler-relay-php-base"
+  - docker build -t "dopplerrelay/doppler-relay-php-base" .
+  - ~/official-images/test/run.sh "dopplerrelay/doppler-relay-php-base"
 
 after_script:
   - docker images
 
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ]; then
+    docker login -e="$DOCKER_EMAIL" -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD";
+    docker push dopplerrelay/doppler-relay-php-base;
+    fi
